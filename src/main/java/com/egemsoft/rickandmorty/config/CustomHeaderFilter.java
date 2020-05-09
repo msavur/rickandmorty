@@ -49,7 +49,7 @@ public class CustomHeaderFilter implements Filter {
         }
         log.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
 
-        if (!servletPath.equals("/report")){
+        if (!servletPath.equals("/report")) {
             LogReportEndpointConverter reportEndpointConverter = new LogReportEndpointConverter();
             ReportEndpoint reportEndpoint = reportEndpointConverter.convert(request);
             reportEndpointRepository.save(reportEndpoint);
@@ -58,12 +58,12 @@ public class CustomHeaderFilter implements Filter {
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            log.trace("exception trace: {}", e.getMessage());
             e.printStackTrace();
         }
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        System.out.println("Init filter");
     }
 }
