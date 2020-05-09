@@ -49,10 +49,12 @@ public class CustomHeaderFilter implements Filter {
         }
         log.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
 
-        LogReportEndpointConverter reportEndpointConverter = new LogReportEndpointConverter();
-        ReportEndpoint reportEndpoint = reportEndpointConverter.convert(request);
+        if (!servletPath.equals("/report")){
+            LogReportEndpointConverter reportEndpointConverter = new LogReportEndpointConverter();
+            ReportEndpoint reportEndpoint = reportEndpointConverter.convert(request);
+            reportEndpointRepository.save(reportEndpoint);
+        }
 
-        reportEndpointRepository.save(reportEndpoint);
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {

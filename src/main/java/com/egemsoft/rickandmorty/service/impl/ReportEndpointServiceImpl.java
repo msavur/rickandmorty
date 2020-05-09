@@ -35,7 +35,7 @@ public class ReportEndpointServiceImpl implements ReportEndpointService {
     private PageableInfo getPageableInfo(Page<ReportEndpoint> reportEndpoints) {
         PageableInfo pageableInfo = new PageableInfo();
         pageableInfo.setCount(reportEndpoints.getTotalElements());
-        pageableInfo.setNext(ApiEndpoint.PAGEABLE_EPISODE_URL + reportEndpoints.getNumber() + 1);
+        pageableInfo.setNext(ApiEndpoint.PAGEABLE_REPORT_ENDPOINT_URL + reportEndpoints.getNumber() + 1);
         pageableInfo.setPages(reportEndpoints.getSize());
         pageableInfo.setPrev("");
         return pageableInfo;
