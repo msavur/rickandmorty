@@ -33,7 +33,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         RestTemplate restTemplate = new RestTemplate();
         List<EpisodeDto> remoteEpisodes = new ArrayList<>();
         GetAllEpisode getAllEpisode = restTemplate.getForObject(ApiEndpoint.PAGEABLE_EPISODE_URL + 1, GetAllEpisode.class);
-        Long pageSize = getAllEpisode.getInfo().getPages();
+        int pageSize = getAllEpisode.getInfo().getPages();
         recursionMethod(pageSize,  1,  remoteEpisodes);
         RemoteEpisodesConverter remoteEpisodesConverter = new RemoteEpisodesConverter();
         List<Episode> episodes = remoteEpisodesConverter.convert(remoteEpisodes);
@@ -49,7 +49,7 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     }
 
 
-    public Long recursionMethod(Long pageSize, int pageCount, List<EpisodeDto> remoteEpisodes) {
+    public int recursionMethod(int pageSize, int pageCount, List<EpisodeDto> remoteEpisodes) {
         RestTemplate restTemplate = new RestTemplate();
         if (pageSize == pageCount) {
             return pageSize;
@@ -59,5 +59,9 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         return recursionMethod(pageSize, pageCount + 1, remoteEpisodes);
     }
 
+
+    public int de(int test = 0){
+
+    }
 
 }
