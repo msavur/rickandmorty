@@ -6,6 +6,7 @@ import com.egemsoft.rickandmorty.service.ReportEndpointService;
 import com.egemsoft.rickandmorty.swagger.GenerateSwaggerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,7 @@ public class ReportController {
 
     private final ReportEndpointService reportEndpointService;
 
-    @GetMapping(value = ReportEndpoint.GET_REPORT)
+    @GetMapping(value = ReportEndpoint.GET_REPORT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public GenericResponse getReport(Pageable pageable) {
         return reportEndpointService.getAllReport(pageable);
     }
