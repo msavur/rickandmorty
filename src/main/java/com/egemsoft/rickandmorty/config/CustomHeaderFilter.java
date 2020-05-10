@@ -49,7 +49,7 @@ public class CustomHeaderFilter implements Filter {
         }
         log.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
 
-        if (!servletPath.equals("/report") && !servletPath.contains("swagger") && !servletPath.contains("/v2/api-docs")) {
+        if (!servletPath.equals("/report")) {
             LogReportEndpointConverter reportEndpointConverter = new LogReportEndpointConverter();
             ReportEndpoint reportEndpoint = reportEndpointConverter.convert(request);
             reportEndpointRepository.save(reportEndpoint);

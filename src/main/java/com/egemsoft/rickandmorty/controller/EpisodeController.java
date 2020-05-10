@@ -6,7 +6,6 @@ import com.egemsoft.rickandmorty.service.EpisodeService;
 import com.egemsoft.rickandmorty.swagger.GenerateSwaggerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +17,12 @@ public class EpisodeController {
 
     private final EpisodeService episodeService;
 
-    @GetMapping(value = EpisodeEndpoint.GET_ALL_EPISODES, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = EpisodeEndpoint.GET_ALL_EPISODES)
     public GenericResponse getAllEpisode(Pageable pageable) {
         return episodeService.getAllEpisode(pageable);
     }
 
-    @GetMapping(value = EpisodeEndpoint.GET_EPISODE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = EpisodeEndpoint.GET_EPISODE)
     public GenericResponse getEpisode(@PathVariable("id") Long id) {
         return episodeService.getEpisode(id);
     }
