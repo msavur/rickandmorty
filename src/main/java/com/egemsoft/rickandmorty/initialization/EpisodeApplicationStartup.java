@@ -31,6 +31,7 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
     private final static int COUNT_PAGE = 2;
 
     private final EpisodeRepository episodeRepository;
+    private final RemoteEpisodeConverter remoteEpisodeConverter;
 
     @Transactional
     @Override
@@ -51,7 +52,6 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
         int pageSize = getAllEpisode.getInfo().getPages();
         remoteEpisodeDtos.addAll(getAllEpisode.getResults());
         recursionEpisode(pageSize, COUNT_PAGE, remoteEpisodeDtos);
-        RemoteEpisodeConverter remoteEpisodeConverter = new RemoteEpisodeConverter();
         List<Episode> remoteEpisodes = remoteEpisodeConverter.convert(remoteEpisodeDtos);
         List<Episode> localEpisodes = episodeRepository.findAll();
 

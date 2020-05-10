@@ -9,14 +9,17 @@ import com.egemsoft.rickandmorty.model.response.ReportEndpointResponse;
 import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.egemsoft.rickandmorty.repository.ReportEndpointRepository;
 import com.egemsoft.rickandmorty.service.ReportEndpointService;
-import com.egemsoft.rickandmorty.util.Producer;
+import com.egemsoft.rickandmorty.thread.RemoteProductRunnable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
@@ -38,16 +41,16 @@ public class ReportEndpointServiceImpl implements ReportEndpointService {
         return new GenericResponse(pageableInfo, endpointResponses);
     }
 
+
     @Override
-    public GenericResponse<?> getThread(){
+    public GenericResponse<?> getThread() {
         List<String> names = characterRepository.getAllCharacterName();
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
 
-
-        for (String name : names) {
+        for (int i = 0; i < names.size(); i++) {
+            RemoteProductRunnable runnable = new RemoteProductRunnable(names.get(i));
+            executorService.submit(runnable);
         }
-
-        Thread producerThread = new Thread(new Producer());
-
 
         return null;
     }

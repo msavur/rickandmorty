@@ -20,7 +20,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -50,11 +52,11 @@ public class Character extends BaseAuditEntity {
     @OneToMany(mappedBy = "character")
     private List<Image> images;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "character_episodes",
             joinColumns = @JoinColumn(name = "character_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "episode_id", referencedColumnName = "id")
     )
-    private List<Episode> episodes;
+    private Set<Episode> episodes = new HashSet<>();
 }

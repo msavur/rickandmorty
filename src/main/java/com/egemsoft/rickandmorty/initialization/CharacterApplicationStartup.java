@@ -3,6 +3,7 @@ package com.egemsoft.rickandmorty.initialization;
 
 import com.egemsoft.rickandmorty.convert.impl.RemoteCharacterConverter;
 import com.egemsoft.rickandmorty.entity.Character;
+import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
 import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.google.common.collect.MapDifference;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -41,12 +44,16 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
         Map<Long, Character> remoteMap = toCharacterMap(remoteCharacters);
 
         MapDifference<Long, Character> mapDifference = Maps.difference(localMap, remoteMap);
-        Map<Long, Character> createMap = mapDifference.entriesOnlyOnRight();
         Map<Long, Character> deleteMap = mapDifference.entriesOnlyOnLeft();
+        deleteCharacter(deleteMap.values());
+
+        // getRemoteEpisodes
+        // link, list<episode>
+
+        Map<Long, Character> createMap = mapDifference.entriesOnlyOnRight();
         Map<Long, MapDifference.ValueDifference<Character>> updateMap = mapDifference.entriesDiffering();
 
         createCharacter(createMap.values());
-        deleteCharacter(deleteMap.values());
         updateCharacter(updateMap.values());
     }
 
@@ -75,5 +82,29 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
     private Map<Long, Character> toCharacterMap(List<Character> characters) {
         return characters.stream()
                 .collect(Collectors.toMap(Character::getRemoteId, r -> r));
+    }
+
+    private void setCharacterEpisodes(Character character, List<String> episodes) {
+        for (String episode : episodes) {
+            episode = episode.substring(episode.lastIndexOf("/") + 1);
+            Episode ep = new Episode();
+            // ep.setName();
+            // ep.set
+            ep.setCharacters(new HashSet<>());
+            ep.getCharacters().add(character);
+            character.getEpisodes().add(ep);
+        }
+
+
+    }
+
+    private void getCharacter(Character character, Map<Long, Episode> characterMap, List<String> characterList) {
+        Set<Episode> episodes = new HashSet<>();
+        characterList.forEach(characterUrl->{
+            characterUrl = characterUrl.substring(characterUrl.lastIndexOf("/") + 1);
+            Episode episode = characterMap.get(characterUrl);
+            //  episode
+            episodes.add(episode);
+        });
     }
 }
