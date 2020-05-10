@@ -33,10 +33,10 @@ public class LocationApplicationStartup implements ApplicationListener<Applicati
     @Transactional
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        initialInsertEpisode();
+        initialInsertLocationTable();
     }
 
-    private void initialInsertEpisode() {
+    private void initialInsertLocationTable() {
         RestTemplate restTemplate = new RestTemplate();
         List<LocationDto> remoteLocationDtos = new ArrayList<>();
         GetAllLocation getLocation = null;

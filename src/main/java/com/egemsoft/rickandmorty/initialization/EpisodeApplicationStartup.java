@@ -33,10 +33,10 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
     @Transactional
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        initialInsertEpisode();
+        initialInsertEpisodeTable();
     }
 
-    private void initialInsertEpisode() {
+    private void initialInsertEpisodeTable() {
         RestTemplate restTemplate = new RestTemplate();
         List<EpisodeDto> remoteEpisodeDtos = new ArrayList<>();
         GetAllEpisode getAllEpisode = null;

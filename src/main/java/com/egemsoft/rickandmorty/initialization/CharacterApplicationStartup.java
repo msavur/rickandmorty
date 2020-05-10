@@ -33,10 +33,10 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
     @Transactional
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        initialInsertEpisode();
+        initialInsertCharacterTable();
     }
 
-    private void initialInsertEpisode() {
+    private void initialInsertCharacterTable() {
         RestTemplate restTemplate = new RestTemplate();
         List<CharacterDto> remoteCharacterDtos = new ArrayList<>();
         GetAllCharacter getAllCharacter = null;
@@ -48,8 +48,8 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
         }
         int pageSize = getAllCharacter.getInfo().getPages();
         recursionCharacter(pageSize, 1, remoteCharacterDtos);
-        RemoteCharacterConverter remoteEpisodeConverter = new RemoteCharacterConverter();
-        List<Character> remoteCharacters = remoteEpisodeConverter.convert(remoteCharacterDtos);
+        RemoteCharacterConverter remoteCharacterConverter = new RemoteCharacterConverter();
+        List<Character> remoteCharacters = remoteCharacterConverter.convert(remoteCharacterDtos);
         List<Character> localCharacters = characterRepository.findAll();
 
         Map<Long, Character> localMap = toCharacterMap(localCharacters);
@@ -60,28 +60,28 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
         Map<Long, Character> deleteMap = mapDifference.entriesOnlyOnLeft();
         Map<Long, MapDifference.ValueDifference<Character>> updateMap = mapDifference.entriesDiffering();
 
-        createEpisodes(createMap.values());
-        deleteEpisodes(deleteMap.values());
-        updateEpisodes(updateMap.values());
+        createCharacter(createMap.values());
+        deleteCharacter(deleteMap.values());
+        updateCharacter(updateMap.values());
     }
 
-    private void createEpisodes(Collection<Character> episodes) {
-        characterRepository.saveAll(episodes);
+    private void createCharacter(Collection<Character> characters) {
+        characterRepository.saveAll(characters);
     }
 
-    private void deleteEpisodes(Collection<Character> episodes) {
-        characterRepository.deleteInBatch(episodes);
+    private void deleteCharacter(Collection<Character> characters) {
+        characterRepository.deleteInBatch(characters);
     }
 
-    private void updateEpisodes(Collection<MapDifference.ValueDifference<Character>> values) {
+    private void updateCharacter(Collection<MapDifference.ValueDifference<Character>> values) {
         List<Character> updates = values.stream()
                 .map(valuesDifference -> {
-                    Character localEpisode = valuesDifference.leftValue();
-                    Character remoteEpisode = valuesDifference.rightValue();
-                    localEpisode.setUrl(remoteEpisode.getUrl());
-                    localEpisode.setName(remoteEpisode.getName());
-                    localEpisode.setCreated(remoteEpisode.getCreated());
-                    return localEpisode;
+                    Character localCharacter = valuesDifference.leftValue();
+                    Character remoteCharacter = valuesDifference.rightValue();
+                    localCharacter.setUrl(remoteCharacter.getUrl());
+                    localCharacter.setName(remoteCharacter.getName());
+                    localCharacter.setCreated(remoteCharacter.getCreated());
+                    return localCharacter;
                 })
                 .collect(Collectors.toList());
         characterRepository.saveAll(updates);
