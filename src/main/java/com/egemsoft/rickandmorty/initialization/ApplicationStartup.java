@@ -58,10 +58,4 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
         remoteEpisodes.addAll(getAllEpisode.getResults());
         return recursionMethod(pageSize, pageCount + 1, remoteEpisodes);
     }
-
-
-    public int de(int test = 0){
-
-    }
-
 }
