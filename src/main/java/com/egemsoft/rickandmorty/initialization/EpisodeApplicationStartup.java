@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EpisodeApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 
+    private final static int COUNT_PAGE = 2;
+
     private final EpisodeRepository episodeRepository;
 
     @Transactional
@@ -47,7 +49,8 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
             return;
         }
         int pageSize = getAllEpisode.getInfo().getPages();
-        recursionEpisode(pageSize, 1, remoteEpisodeDtos);
+        remoteEpisodeDtos.addAll(getAllEpisode.getResults());
+        recursionEpisode(pageSize, COUNT_PAGE, remoteEpisodeDtos);
         RemoteEpisodeConverter remoteEpisodeConverter = new RemoteEpisodeConverter();
         List<Episode> remoteEpisodes = remoteEpisodeConverter.convert(remoteEpisodeDtos);
         List<Episode> localEpisodes = episodeRepository.findAll();

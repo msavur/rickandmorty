@@ -18,4 +18,10 @@ public class ReportController {
     public GenericResponse getReport(Pageable pageable) {
         return reportEndpointService.getAllReport(pageable);
     }
+
+
+    @GetMapping(value = ReportEndpoint.GET_THREAD)
+    public GenericResponse getThread() {
+        return reportEndpointService.getThread();
+    }
 }

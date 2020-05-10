@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CharacterApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 
+    private final static int COUNT_PAGE = 2;
+
     private final CharacterRepository characterRepository;
 
     @Transactional
@@ -47,7 +49,8 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
             return;
         }
         int pageSize = getAllCharacter.getInfo().getPages();
-        recursionCharacter(pageSize, 1, remoteCharacterDtos);
+        remoteCharacterDtos.addAll(getAllCharacter.getResults());
+        recursionCharacter(pageSize, COUNT_PAGE, remoteCharacterDtos);
         RemoteCharacterConverter remoteCharacterConverter = new RemoteCharacterConverter();
         List<Character> remoteCharacters = remoteCharacterConverter.convert(remoteCharacterDtos);
         List<Character> localCharacters = characterRepository.findAll();

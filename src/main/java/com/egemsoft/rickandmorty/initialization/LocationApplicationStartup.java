@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LocationApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
 
+    private final static int COUNT_PAGE = 2;
+
     private final LocationRepository locationRepository;
 
     @Transactional
@@ -47,7 +49,8 @@ public class LocationApplicationStartup implements ApplicationListener<Applicati
             return;
         }
         int pageSize = getLocation.getInfo().getPages();
-        recursionLocation(pageSize, 1, remoteLocationDtos);
+        remoteLocationDtos.addAll(getLocation.getResults());
+        recursionLocation(pageSize, COUNT_PAGE, remoteLocationDtos);
         RemoteLocationConverter remoteLocationConverter = new RemoteLocationConverter();
         List<Location> remoteLocations = remoteLocationConverter.convert(remoteLocationDtos);
         List<Location> localLocations = locationRepository.findAll();

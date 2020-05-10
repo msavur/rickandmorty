@@ -6,4 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ReportEndpointService {
     GenericResponse<?> getAllReport(Pageable pageable);
+
+    GenericResponse<?> getThread();
+
 }

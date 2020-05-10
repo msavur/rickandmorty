@@ -6,8 +6,10 @@ import com.egemsoft.rickandmorty.entity.ReportEndpoint;
 import com.egemsoft.rickandmorty.model.generic.GenericResponse;
 import com.egemsoft.rickandmorty.model.generic.PageableInfo;
 import com.egemsoft.rickandmorty.model.response.ReportEndpointResponse;
+import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.egemsoft.rickandmorty.repository.ReportEndpointRepository;
 import com.egemsoft.rickandmorty.service.ReportEndpointService;
+import com.egemsoft.rickandmorty.util.Producer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +23,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportEndpointServiceImpl implements ReportEndpointService {
 
+    private static final int THREAD_COUNT = 25;
+
+
     private final ReportEndpointRepository reportEndpointRepository;
+    private final CharacterRepository characterRepository;
 
     @Override
     public GenericResponse<?> getAllReport(Pageable pageable) {
@@ -30,6 +36,20 @@ public class ReportEndpointServiceImpl implements ReportEndpointService {
         List<ReportEndpointResponse> endpointResponses = reportEndpointConverter.convert(reportEndpointPage);
         PageableInfo pageableInfo = getPageableInfo(reportEndpointPage);
         return new GenericResponse(pageableInfo, endpointResponses);
+    }
+
+    @Override
+    public GenericResponse<?> getThread(){
+        List<String> names = characterRepository.getAllCharacterName();
+
+
+        for (String name : names) {
+        }
+
+        Thread producerThread = new Thread(new Producer());
+
+
+        return null;
     }
 
     private PageableInfo getPageableInfo(Page<ReportEndpoint> reportEndpoints) {
