@@ -28,6 +28,8 @@ import java.util.List;
 @Table(name = "character")
 public class Character extends BaseAuditEntity {
 
+    private Long remoteId;
+
     @Enumerated(EnumType.STRING)
     private CharacterStatusEnum status;
 

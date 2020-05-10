@@ -3,26 +3,24 @@ package com.egemsoft.rickandmorty.convert.impl;
 
 import com.egemsoft.rickandmorty.convert.BaseConverter;
 import com.egemsoft.rickandmorty.entity.Episode;
-import com.egemsoft.rickandmorty.model.response.GetAllEpisode;
+import com.egemsoft.rickandmorty.model.dto.EpisodeDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemoteEpisodesConverter implements BaseConverter<List<GetAllEpisode>, List<Episode>> {
+public class RemoteEpisodesConverter implements BaseConverter<List<EpisodeDto>, List<Episode>> {
 
 
     @Override
-    public List<Episode> convert(List<GetAllEpisode> remoteEpisodes) {
+    public List<Episode> convert(List<EpisodeDto> remoteEpisodes) {
         List<Episode> episodes = new ArrayList<>();
         remoteEpisodes.forEach(remote -> {
-            remote.getResults().forEach(result -> {
-                Episode episode = new Episode();
-                episode.setAirDate(result.getAirDate());
-                episode.setEpisode(result.getEpisode());
-                episode.setName(result.getName());
-                episode.setUrl(result.getUrl());
-                episodes.add(episode);
-            });
+            Episode episode = new Episode();
+            episode.setAirDate(remote.getAirDate());
+            episode.setEpisode(remote.getEpisode());
+            episode.setName(remote.getName());
+            episode.setUrl(remote.getUrl());
+            episodes.add(episode);
         });
         return episodes;
     }

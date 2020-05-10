@@ -25,6 +25,7 @@ import java.util.List;
 @Table(name = "episode")
 public class Episode extends BaseAuditEntity {
 
+    private Long remoteId;
     private Date airDate;
     private String episode;
 
