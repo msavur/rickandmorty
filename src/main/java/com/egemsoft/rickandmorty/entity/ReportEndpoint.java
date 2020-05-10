@@ -8,10 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -21,15 +23,24 @@ import javax.persistence.Table;
 @Table(name = "report_endpoint")
 public class ReportEndpoint extends BaseAuditEntity {
 
+    private Date createDate;
+    private String host;
+    private String remoteAddress;
     private String name;
-
-    private String header;
-
-    private String body;
-
     private String method;
+
+    @Column(columnDefinition = "text")
+    private String requestBody;
 
     @Enumerated(EnumType.STRING)
     private EndpointEnum type;
 
+    @Column(columnDefinition = "text")
+    private String requestHeader;
+
+    @Column(columnDefinition = "text")
+    private String responseBody;
+
+    @Column(columnDefinition = "text")
+    private String responseHeader;
 }
