@@ -19,6 +19,9 @@ import javax.persistence.Table;
 @Table(name = "image")
 public class Image extends BaseAuditEntity {
 
+    private String sourceType;
+
     @ManyToOne
     private Character character;
+
 }

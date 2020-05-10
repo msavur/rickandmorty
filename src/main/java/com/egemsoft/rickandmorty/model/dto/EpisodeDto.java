@@ -1,6 +1,7 @@
 package com.egemsoft.rickandmorty.model.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,9 +13,10 @@ import java.util.List;
 public class EpisodeDto {
     private Long id;
     private String name;
-    private Date airDate;
+    @JsonProperty("air_date")
+    private String airDate;
     private String episode;
-    private List<String> characters;
     private String url;
-    private String created;
+    private Date created;
+    private List<String> characters;
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,6 +19,7 @@ public class CharacterDto {
     private String gender;
     private String image;
     private String url;
-    private Date crated;
+    private Date created;
+    private List<String> episode;
 
 }

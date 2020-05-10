@@ -4,6 +4,7 @@ package com.egemsoft.rickandmorty.model.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -15,5 +16,5 @@ public class LocationDto {
     private String dimension;
     private List<String> residents;
     private String url;
-    private String created;
+    private Date created;
 }
