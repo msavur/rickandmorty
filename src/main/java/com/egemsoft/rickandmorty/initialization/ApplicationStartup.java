@@ -5,7 +5,6 @@ import com.egemsoft.rickandmorty.convert.impl.RemoteEpisodesConverter;
 import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.model.response.GetAllEpisode;
 import com.egemsoft.rickandmorty.repository.EpisodeRepository;
-import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,6 +42,6 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private void createEpisodes(List<Episode> episodes) {
 
         episodeRepository.save(episodes.get(0));
-       // Lists.partition(new ArrayList<>(episodes), 1).forEach(episodeRepository::save);
+        // Lists.partition(new ArrayList<>(episodes), 1).forEach(episodeRepository::save);
     }
 }
