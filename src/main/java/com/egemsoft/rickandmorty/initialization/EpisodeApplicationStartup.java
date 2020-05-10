@@ -1,7 +1,7 @@
 package com.egemsoft.rickandmorty.initialization;
 
 
-import com.egemsoft.rickandmorty.convert.impl.RemoteEpisodesConverter;
+import com.egemsoft.rickandmorty.convert.impl.RemoteEpisodeConverter;
 import com.egemsoft.rickandmorty.convert.impl.endpoint.ApiEndpoint;
 import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.model.dto.EpisodeDto;
@@ -10,6 +10,7 @@ import com.egemsoft.rickandmorty.repository.EpisodeRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class EpisodeApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
@@ -37,19 +39,21 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
     private void initialInsertEpisode() {
         RestTemplate restTemplate = new RestTemplate();
         List<EpisodeDto> remoteEpisodeDtos = new ArrayList<>();
-        GetAllEpisode getAllEpisode = restTemplate.getForObject(ApiEndpoint.PAGEABLE_EPISODE_URL + 1, GetAllEpisode.class);
+        GetAllEpisode getAllEpisode = null;
+        try {
+            getAllEpisode = restTemplate.getForObject(ApiEndpoint.PAGEABLE_EPISODE_URL + 1, GetAllEpisode.class);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            return;
+        }
         int pageSize = getAllEpisode.getInfo().getPages();
-        recursionMethod(pageSize,  1,  remoteEpisodeDtos);
-        RemoteEpisodesConverter remoteEpisodesConverter = new RemoteEpisodesConverter();
-        List<Episode> remoteEpisodes = remoteEpisodesConverter.convert(remoteEpisodeDtos);
+        recursionEpisode(pageSize, 1, remoteEpisodeDtos);
+        RemoteEpisodeConverter remoteEpisodeConverter = new RemoteEpisodeConverter();
+        List<Episode> remoteEpisodes = remoteEpisodeConverter.convert(remoteEpisodeDtos);
+        List<Episode> localEpisodes = episodeRepository.findAll();
 
-        List<Episode> localEpisode = episodeRepository.findAll();
-
-        Map<Long, Episode> remoteMap = remoteEpisodes.stream()
-                .collect(Collectors.toMap(Episode::getRemoteId, r -> r));
-
-        Map<Long, Episode> localMap = localEpisode.stream()
-                .collect(Collectors.toMap(Episode::getRemoteId, r -> r));
+        Map<Long, Episode> localMap = toEpisodeMap(localEpisodes);
+        Map<Long, Episode> remoteMap = toEpisodeMap(remoteEpisodes);
 
         MapDifference<Long, Episode> mapDifference = Maps.difference(localMap, remoteMap);
         Map<Long, Episode> createMap = mapDifference.entriesOnlyOnRight();
@@ -84,12 +88,17 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
         episodeRepository.saveAll(updates);
     }
 
-    public int recursionMethod(int pageSize, int pageCount, List<EpisodeDto> remoteEpisodeDtos) {
+    private Map<Long, Episode> toEpisodeMap(List<Episode> characters) {
+        return characters.stream()
+                .collect(Collectors.toMap(Episode::getRemoteId, r -> r));
+    }
+
+    public int recursionEpisode(int pageSize, int pageCount, List<EpisodeDto> remoteEpisodeDtos) {
         RestTemplate restTemplate = new RestTemplate();
         if (pageSize >= pageCount) {
             GetAllEpisode getAllEpisode = restTemplate.getForObject(ApiEndpoint.PAGEABLE_EPISODE_URL + pageCount, GetAllEpisode.class);
             remoteEpisodeDtos.addAll(getAllEpisode.getResults());
-            return recursionMethod(pageSize, pageCount + 1, remoteEpisodeDtos);
+            return recursionEpisode(pageSize, pageCount + 1, remoteEpisodeDtos);
         }
         return pageSize;
 

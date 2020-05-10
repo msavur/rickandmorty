@@ -10,6 +10,7 @@ import com.egemsoft.rickandmorty.repository.LocationRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class LocationApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
@@ -37,18 +39,21 @@ public class LocationApplicationStartup implements ApplicationListener<Applicati
     private void initialInsertEpisode() {
         RestTemplate restTemplate = new RestTemplate();
         List<LocationDto> remoteLocationDtos = new ArrayList<>();
-        GetAllLocation getLocation = restTemplate.getForObject(ApiEndpoint.PAGEABLE_LOCATION_URL + 1, GetAllLocation.class);
+        GetAllLocation getLocation = null;
+        try {
+            getLocation = restTemplate.getForObject(ApiEndpoint.PAGEABLE_LOCATION_URL + 1, GetAllLocation.class);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            return;
+        }
         int pageSize = getLocation.getInfo().getPages();
-        recursionMethod(pageSize, 1, remoteLocationDtos);
+        recursionLocation(pageSize, 1, remoteLocationDtos);
         RemoteLocationConverter remoteLocationConverter = new RemoteLocationConverter();
         List<Location> remoteLocations = remoteLocationConverter.convert(remoteLocationDtos);
         List<Location> localLocations = locationRepository.findAll();
 
-        Map<Long, Location> remoteMap = remoteLocations.stream()
-                .collect(Collectors.toMap(Location::getRemoteId, r -> r));
-
-        Map<Long, Location> localMap = localLocations.stream()
-                .collect(Collectors.toMap(Location::getRemoteId, r -> r));
+        Map<Long, Location> localMap = toLocationMap(localLocations);
+        Map<Long, Location> remoteMap = toLocationMap(remoteLocations);
 
         MapDifference<Long, Location> mapDifference = Maps.difference(localMap, remoteMap);
         Map<Long, Location> createMap = mapDifference.entriesOnlyOnRight();
@@ -84,12 +89,17 @@ public class LocationApplicationStartup implements ApplicationListener<Applicati
         locationRepository.saveAll(updates);
     }
 
-    public int recursionMethod(int pageSize, int pageCount, List<LocationDto> remoteLocationDtos) {
+    private Map<Long, Location> toLocationMap(List<Location> characters) {
+        return characters.stream()
+                .collect(Collectors.toMap(Location::getRemoteId, r -> r));
+    }
+
+    public int recursionLocation(int pageSize, int pageCount, List<LocationDto> remoteLocationDtos) {
         RestTemplate restTemplate = new RestTemplate();
         if (pageSize >= pageCount) {
             GetAllLocation getCurrentPageLocations = restTemplate.getForObject(ApiEndpoint.PAGEABLE_LOCATION_URL + pageCount, GetAllLocation.class);
             remoteLocationDtos.addAll(getCurrentPageLocations.getResults());
-            return recursionMethod(pageSize, pageCount + 1, remoteLocationDtos);
+            return recursionLocation(pageSize, pageCount + 1, remoteLocationDtos);
         }
         return pageSize;
 

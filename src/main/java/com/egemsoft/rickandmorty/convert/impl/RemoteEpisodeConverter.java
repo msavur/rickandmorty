@@ -8,7 +8,7 @@ import com.egemsoft.rickandmorty.model.dto.EpisodeDto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RemoteEpisodesConverter implements BaseConverter<List<EpisodeDto>, List<Episode>> {
+public class RemoteEpisodeConverter implements BaseConverter<List<EpisodeDto>, List<Episode>> {
 
 
     @Override
