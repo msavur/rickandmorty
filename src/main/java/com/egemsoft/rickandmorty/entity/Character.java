@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
 
@@ -45,8 +47,8 @@ public class Character extends BaseAuditEntity {
     @ManyToOne
     private Location location;
 
-    @ManyToOne
-    private Image image;
+    @OneToMany
+    private List<Image> images;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -2,6 +2,7 @@ package com.egemsoft.rickandmorty.entity;
 
 
 import com.egemsoft.rickandmorty.entity.base.BaseAuditEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.List;
 public class Episode extends BaseAuditEntity {
 
     private Long remoteId;
+    @JsonProperty()
     private Date airDate;
     private String episode;
 

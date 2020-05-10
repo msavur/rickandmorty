@@ -19,6 +19,8 @@ public interface CharacterRepository extends JpaRepository<Character, Long> {
 
     List<Character> findAll();
 
+    List<Character> findByRemoteIdIn(List<Long> remoteIds);
+
     @Query(value = "select name from Character ")
     List<String> getAllCharacterName();
 }
