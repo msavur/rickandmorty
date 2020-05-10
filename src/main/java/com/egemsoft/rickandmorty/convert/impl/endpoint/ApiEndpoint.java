@@ -14,6 +14,8 @@ public final class ApiEndpoint {
 
     public static final String PAGEABLE_CHARACTER_URL = CHARACTER_URL + "?page=";
 
+    public static final String PAGEABLE_LOCATION_URL = BASE_URL + "/location?page=";
+
     public static final String PAGEABLE_REPORT_ENDPOINT_URL = REPORT_ENDPOINT_URL + "?page=";
 
 

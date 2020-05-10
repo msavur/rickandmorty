@@ -16,5 +16,5 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long> {
 
     Optional<Episode> findById(Long id);
 
-    Long save(List<Episode> episodes);
+    List<Episode> findAll();
 }

@@ -16,6 +16,7 @@ public class RemoteEpisodesConverter implements BaseConverter<List<EpisodeDto>, 
         List<Episode> episodes = new ArrayList<>();
         remoteEpisodes.forEach(remote -> {
             Episode episode = new Episode();
+            episode.setRemoteId(remote.getId());
             episode.setAirDate(remote.getAirDate());
             episode.setEpisode(remote.getEpisode());
             episode.setName(remote.getName());

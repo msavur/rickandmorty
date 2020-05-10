@@ -21,6 +21,7 @@ import java.util.List;
 @Table(name = "location")
 public class Location extends BaseAuditEntity {
 
+    private Long remoteId;
     private String dimension;
     private String species;
     private String type;
