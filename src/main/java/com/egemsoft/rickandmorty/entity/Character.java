@@ -47,12 +47,12 @@ public class Character extends BaseAuditEntity {
     @ManyToOne
     private Location location;
 
-    @OneToMany
+    @OneToMany(mappedBy = "character")
     private List<Image> images;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "character_episode",
+            name = "character_episodes",
             joinColumns = @JoinColumn(name = "character_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "episode_id", referencedColumnName = "id")
     )
