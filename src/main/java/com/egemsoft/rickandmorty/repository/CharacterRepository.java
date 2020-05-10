@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface CharacterRepository extends JpaRepository<Character, Long> {
 
-    Page<Character> findByOrderById(Pageable pageable);
+    Page<Character> findAll(Pageable pageable);
 
     Optional<Character> findById(Long id);
 

@@ -28,7 +28,7 @@ public class CharacterServiceImpl implements CharacterService {
 
     @Override
     public GenericResponse<EpisodeResponse> getAllCharacter(Pageable pageable) {
-        Page<Character> characterPage = characterRepository.findByOrderById(pageable);
+        Page<Character> characterPage = characterRepository.findAll(pageable);
         CharactersConverter charactersConverter = new CharactersConverter();
         List<CharacterResponse> response = charactersConverter.convert(characterPage);
         PageableInfo pageableInfo = getPageableInfo(characterPage);
