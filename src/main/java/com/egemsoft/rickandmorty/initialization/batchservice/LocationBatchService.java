@@ -1,4 +1,4 @@
-package com.egemsoft.rickandmorty.initialization;
+package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
 import com.egemsoft.rickandmorty.convert.impl.RemoteLocationConverter;
@@ -11,13 +11,10 @@ import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,19 +24,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class LocationApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
+public class LocationBatchService {
 
     private final static int COUNT_PAGE = 2;
 
     private final LocationRepository locationRepository;
 
-    @Transactional
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        initialInsertLocationTable();
-    }
-
-    private void initialInsertLocationTable() {
+    public void execute() {
         RestTemplate restTemplate = new RestTemplate();
         List<LocationDto> remoteLocationDtos = new ArrayList<>();
         GetAllLocation getLocation = null;

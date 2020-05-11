@@ -1,4 +1,4 @@
-package com.egemsoft.rickandmorty.initialization;
+package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
 import com.egemsoft.rickandmorty.convert.impl.RemoteEpisodeConverter;
@@ -7,19 +7,15 @@ import com.egemsoft.rickandmorty.entity.Character;
 import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.model.dto.EpisodeDto;
 import com.egemsoft.rickandmorty.model.response.GetAllEpisode;
-import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.egemsoft.rickandmorty.repository.EpisodeRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -31,21 +27,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EpisodeApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
+public class EpisodeBatchService {
 
     private final static int COUNT_PAGE = 2;
 
     private final EpisodeRepository episodeRepository;
     private final RemoteEpisodeConverter remoteEpisodeConverter;
-    private final CharacterRepository characterRepository;
 
-    @Transactional
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        initialInsertEpisodeTable();
-    }
-
-    private void initialInsertEpisodeTable() {
+    public void execute() {
         RestTemplate restTemplate = new RestTemplate();
         List<EpisodeDto> remoteEpisodeDtos = new ArrayList<>();
         GetAllEpisode getAllEpisode = null;

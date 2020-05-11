@@ -33,7 +33,7 @@ public class RemoteCharacterConverter implements BaseConverter<List<CharacterDto
             Kind kind = new Kind();
             kind.setCreated(new Date());
             kind.setName(remote.getSpecies().toUpperCase());
-            character.setSpecies(kind);
+            character.setKind(kind);
             character.setGender(GenderEnum.findGenderEnum(remote.getGender()));
             character.setStatus(CharacterStatusEnum.findCharacterStatusEnum(remote.getStatus()));
             character.setEpisodes(new HashSet<>());

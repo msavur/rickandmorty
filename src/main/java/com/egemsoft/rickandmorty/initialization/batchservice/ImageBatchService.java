@@ -1,4 +1,4 @@
-package com.egemsoft.rickandmorty.initialization;
+package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
 import com.egemsoft.rickandmorty.convert.impl.RemoteImageConverter;
@@ -11,12 +11,9 @@ import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -26,18 +23,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ImageApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
+public class ImageBatchService {
 
     private final RemoteImageConverter remoteImageConverter;
     private final ImageRepository imageRepository;
 
-    @Transactional
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        initialInsertCharacterTable();
-    }
-
-    private void initialInsertCharacterTable() {
+    public void execute() {
         List<Image> remoteImages = remoteImageConverter.convert(CommonRestRequest.getAllCharacter());
         List<Image> localImages = imageRepository.findAllBySourceType(SourceTypeEnum.CHARACTER);
 

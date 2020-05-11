@@ -1,4 +1,4 @@
-package com.egemsoft.rickandmorty.initialization;
+package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
 import com.egemsoft.rickandmorty.convert.impl.RemoteCharacterConverter;
@@ -13,15 +13,10 @@ import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,35 +26,21 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CharacterApplicationStartup implements ApplicationListener<ApplicationReadyEvent> {
+public class CharacterBatchService {
 
     private final CharacterRepository characterRepository;
     private final RemoteCharacterConverter remoteCharacterConverter;
     private final KindRepository kindRepository;
 
-    @Transactional
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        initialInsertCharacterTable();
-    }
-
-    private void initialInsertCharacterTable() {
+    public void execute() {
         List<Character> remoteCharacters = remoteCharacterConverter.convert(CommonRestRequest.getAllCharacter());
         List<Character> localCharacters = characterRepository.findAll();
 
-        Map<String, Kind> kindMap = kindRepository.findAll()
-                .stream()
-                .collect(Collectors.toMap(m -> m.getName().toUpperCase(), k -> k));
+        Map<String, Kind> kindMap = kindRepository.findAll().stream().collect(Collectors.toMap(k -> k.getName().toUpperCase(), k -> k));
 
-        Map<String, Kind> remoteNonKinds = new HashMap<>();
-        remoteCharacters.forEach(remoteCharacter -> {
-            if (kindMap.containsKey(remoteCharacter.getSpecies().getName())) {
-                remoteCharacter.getSpecies().setId(kindMap.get(remoteCharacter.getSpecies().getName()).getId());
-            }
-        });
-
-        if (!CollectionUtils.isEmpty(remoteNonKinds.values())) {
-            insertKinds(remoteNonKinds.values());
+        for (Character remoteCharacter : remoteCharacters) {
+            Kind kind = kindMap.get(remoteCharacter.getKind().getName());
+            remoteCharacter.setKind(kind);
         }
 
         Map<Long, Character> localMap = toCharacterMap(localCharacters);
@@ -73,7 +54,6 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
         }
 
 
-        List<CharacterDto> allCharacter = CommonRestRequest.getAllCharacter();
 
         // getRemoteEpisodes
         // link, list<episode>
@@ -84,10 +64,6 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
 
         createCharacter(createMap.values());
         updateCharacter(updateMap.values());
-    }
-
-    private void insertKinds(Collection<Kind> localNonKins) {
-        kindRepository.saveAll(localNonKins);
     }
 
     private void createCharacter(Collection<Character> characters) {
@@ -106,6 +82,7 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
                     localCharacter.setUrl(remoteCharacter.getUrl());
                     localCharacter.setName(remoteCharacter.getName());
                     localCharacter.setCreated(remoteCharacter.getCreated());
+                    localCharacter.setKind(remoteCharacter.getKind());
                     return localCharacter;
                 })
                 .collect(Collectors.toList());
@@ -115,29 +92,5 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
     private Map<Long, Character> toCharacterMap(List<Character> characters) {
         return characters.stream()
                 .collect(Collectors.toMap(Character::getRemoteId, r -> r));
-    }
-
-    private void setCharacterEpisodes(Character character, List<String> episodes) {
-        for (String episode : episodes) {
-            episode = episode.substring(episode.lastIndexOf("/") + 1);
-            Episode ep = new Episode();
-            // ep.setName();
-            // ep.set
-            ep.setCharacters(new HashSet<>());
-            ep.getCharacters().add(character);
-            character.getEpisodes().add(ep);
-        }
-
-
-    }
-
-    private void getCharacter(Character character, Map<Long, Episode> characterMap, List<String> characterList) {
-        Set<Episode> episodes = new HashSet<>();
-        characterList.forEach(characterUrl -> {
-            characterUrl = characterUrl.substring(characterUrl.lastIndexOf("/") + 1);
-            Episode episode = characterMap.get(characterUrl);
-            //  episode
-            episodes.add(episode);
-        });
     }
 }

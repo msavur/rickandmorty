@@ -40,8 +40,8 @@ public class Character extends BaseAuditEntity {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
-    @ManyToOne
-    private Kind species;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Kind kind;
 
     @ManyToOne
     private CharacterType type;
@@ -49,7 +49,7 @@ public class Character extends BaseAuditEntity {
     @ManyToOne
     private Location location;
 
-    @OneToMany(mappedBy = "character")
+    @OneToMany(mappedBy = "character", cascade = CascadeType.ALL)
     private List<Image> images;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
