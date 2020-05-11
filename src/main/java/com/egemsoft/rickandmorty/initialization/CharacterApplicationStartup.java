@@ -5,6 +5,7 @@ import com.egemsoft.rickandmorty.convert.impl.RemoteCharacterConverter;
 import com.egemsoft.rickandmorty.entity.Character;
 import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
+import com.egemsoft.rickandmorty.model.dto.CharacterDto;
 import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
@@ -45,7 +47,14 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
 
         MapDifference<Long, Character> mapDifference = Maps.difference(localMap, remoteMap);
         Map<Long, Character> deleteMap = mapDifference.entriesOnlyOnLeft();
-        deleteCharacter(deleteMap.values());
+
+        if (CollectionUtils.isEmpty(deleteMap.values())){
+            deleteCharacter(deleteMap.values());
+        }
+
+
+
+        List<CharacterDto> allCharacter = CommonRestRequest.getAllCharacter();
 
         // getRemoteEpisodes
         // link, list<episode>
