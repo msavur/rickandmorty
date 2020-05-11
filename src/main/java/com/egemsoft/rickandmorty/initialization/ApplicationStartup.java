@@ -2,6 +2,7 @@ package com.egemsoft.rickandmorty.initialization;
 
 
 import com.egemsoft.rickandmorty.initialization.batchservice.CharacterBatchService;
+import com.egemsoft.rickandmorty.initialization.batchservice.CharacterTypeBatchService;
 import com.egemsoft.rickandmorty.initialization.batchservice.EpisodeBatchService;
 import com.egemsoft.rickandmorty.initialization.batchservice.ImageBatchService;
 import com.egemsoft.rickandmorty.initialization.batchservice.KindBatchService;
@@ -24,14 +25,16 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private final ImageBatchService imageBatchService;
     private final KindBatchService kindBatchService;
     private final LocationBatchService locationBatchService;
+    private final CharacterTypeBatchService characterTypeBatchService;
 
     @Transactional
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        episodeBatchService.execute();
-        kindBatchService.execute();
+      //  episodeBatchService.execute();
+       // kindBatchService.execute();
+        characterTypeBatchService.execute();
         characterBatchService.execute();
-        imageBatchService.execute();
-        locationBatchService.execute();
+       // imageBatchService.execute();
+       // locationBatchService.execute();
     }
 }

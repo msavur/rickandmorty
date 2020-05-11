@@ -3,11 +3,11 @@ package com.egemsoft.rickandmorty.initialization.batchservice;
 
 import com.egemsoft.rickandmorty.convert.impl.RemoteCharacterConverter;
 import com.egemsoft.rickandmorty.entity.Character;
-import com.egemsoft.rickandmorty.entity.Episode;
+import com.egemsoft.rickandmorty.entity.CharacterType;
 import com.egemsoft.rickandmorty.entity.Kind;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
-import com.egemsoft.rickandmorty.model.dto.CharacterDto;
 import com.egemsoft.rickandmorty.repository.CharacterRepository;
+import com.egemsoft.rickandmorty.repository.CharacterTypeRepository;
 import com.egemsoft.rickandmorty.repository.KindRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
@@ -15,12 +15,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,16 +31,20 @@ public class CharacterBatchService {
     private final CharacterRepository characterRepository;
     private final RemoteCharacterConverter remoteCharacterConverter;
     private final KindRepository kindRepository;
+    private final CharacterTypeRepository characterTypeRepository;
 
     public void execute() {
         List<Character> remoteCharacters = remoteCharacterConverter.convert(CommonRestRequest.getAllCharacter());
         List<Character> localCharacters = characterRepository.findAll();
 
         Map<String, Kind> kindMap = kindRepository.findAll().stream().collect(Collectors.toMap(k -> k.getName().toUpperCase(), k -> k));
+        Map<String, CharacterType> characterTypeMap = characterTypeRepository.findAll().stream().collect(Collectors.toMap(CharacterType::getName, k -> k));
 
         for (Character remoteCharacter : remoteCharacters) {
-            Kind kind = kindMap.get(remoteCharacter.getKind().getName());
-            remoteCharacter.setKind(kind);
+            if (!StringUtils.isEmpty(remoteCharacter.getKind().getName()))
+                remoteCharacter.setKind(kindMap.get(remoteCharacter.getKind().getName()));
+            if (!StringUtils.isEmpty(remoteCharacter.getType().getName()))
+                remoteCharacter.setType(characterTypeMap.get(remoteCharacter.getType().getName()));
         }
 
         Map<Long, Character> localMap = toCharacterMap(localCharacters);
@@ -52,7 +56,6 @@ public class CharacterBatchService {
         if (CollectionUtils.isEmpty(deleteMap.values())) {
             deleteCharacter(deleteMap.values());
         }
-
 
 
         // getRemoteEpisodes
@@ -82,7 +85,10 @@ public class CharacterBatchService {
                     localCharacter.setUrl(remoteCharacter.getUrl());
                     localCharacter.setName(remoteCharacter.getName());
                     localCharacter.setCreated(remoteCharacter.getCreated());
-                    localCharacter.setKind(remoteCharacter.getKind());
+                    if (!ObjectUtils.isEmpty(remoteCharacter.getType()) && !StringUtils.isEmpty(remoteCharacter.getKind().getName()))
+                        localCharacter.setKind(remoteCharacter.getKind());
+                    if (!ObjectUtils.isEmpty(remoteCharacter.getType()) && !StringUtils.isEmpty(remoteCharacter.getType().getName()))
+                        localCharacter.setType(remoteCharacter.getType());
                     return localCharacter;
                 })
                 .collect(Collectors.toList());

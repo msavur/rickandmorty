@@ -3,6 +3,7 @@ package com.egemsoft.rickandmorty.convert.impl;
 
 import com.egemsoft.rickandmorty.convert.BaseConverter;
 import com.egemsoft.rickandmorty.entity.Character;
+import com.egemsoft.rickandmorty.entity.CharacterType;
 import com.egemsoft.rickandmorty.entity.Kind;
 import com.egemsoft.rickandmorty.enums.CharacterStatusEnum;
 import com.egemsoft.rickandmorty.enums.GenderEnum;
@@ -30,15 +31,27 @@ public class RemoteCharacterConverter implements BaseConverter<List<CharacterDto
             character.setName(remote.getName());
             character.setUrl(remote.getUrl());
             character.setCreated(remote.getCreated());
-            Kind kind = new Kind();
-            kind.setCreated(new Date());
-            kind.setName(remote.getSpecies().toUpperCase());
-            character.setKind(kind);
+            character.setKind(getCreateKind(remote));
+            character.setType(getCreateCharacterType(remote));
             character.setGender(GenderEnum.findGenderEnum(remote.getGender()));
             character.setStatus(CharacterStatusEnum.findCharacterStatusEnum(remote.getStatus()));
             character.setEpisodes(new HashSet<>());
             characters.add(character);
         }
         return characters;
+    }
+
+    private CharacterType getCreateCharacterType(CharacterDto remote) {
+        CharacterType characterType = new CharacterType();
+        characterType.setName(remote.getType());
+        characterType.setCreated(new Date());
+        return characterType;
+    }
+
+    private Kind getCreateKind(CharacterDto remote) {
+        Kind kind = new Kind();
+        kind.setCreated(new Date());
+        kind.setName(remote.getSpecies().toUpperCase());
+        return kind;
     }
 }
