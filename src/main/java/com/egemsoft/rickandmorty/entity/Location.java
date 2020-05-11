@@ -26,6 +26,6 @@ public class Location extends BaseAuditEntity {
     private String species;
     private String type;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
+    @OneToMany(mappedBy = "location")
     private List<Character> residents;
 }

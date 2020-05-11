@@ -30,11 +30,10 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     @Transactional
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-      //  episodeBatchService.execute();
-       // kindBatchService.execute();
+        episodeBatchService.execute();
+        kindBatchService.execute();
         characterTypeBatchService.execute();
         characterBatchService.execute();
-       // imageBatchService.execute();
        // locationBatchService.execute();
     }
 }

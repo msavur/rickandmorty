@@ -40,10 +40,10 @@ public class Character extends BaseAuditEntity {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Kind kind;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private CharacterType type;
 
     @ManyToOne

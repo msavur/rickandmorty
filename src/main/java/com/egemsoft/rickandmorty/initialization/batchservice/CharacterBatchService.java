@@ -47,13 +47,14 @@ public class CharacterBatchService {
                 remoteCharacter.setType(characterTypeMap.get(remoteCharacter.getType().getName()));
         }
 
+
         Map<Long, Character> localMap = toCharacterMap(localCharacters);
         Map<Long, Character> remoteMap = toCharacterMap(remoteCharacters);
 
         MapDifference<Long, Character> mapDifference = Maps.difference(localMap, remoteMap);
         Map<Long, Character> deleteMap = mapDifference.entriesOnlyOnLeft();
 
-        if (CollectionUtils.isEmpty(deleteMap.values())) {
+        if (!CollectionUtils.isEmpty(deleteMap.values())) {
             deleteCharacter(deleteMap.values());
         }
 
@@ -65,8 +66,12 @@ public class CharacterBatchService {
         Map<Long, Character> createMap = mapDifference.entriesOnlyOnRight();
         Map<Long, MapDifference.ValueDifference<Character>> updateMap = mapDifference.entriesDiffering();
 
-        createCharacter(createMap.values());
-        updateCharacter(updateMap.values());
+        if (!CollectionUtils.isEmpty(createMap.values())) {
+            createCharacter(createMap.values());
+        }
+        if (!CollectionUtils.isEmpty(updateMap.values())) {
+            updateCharacter(updateMap.values());
+        }
     }
 
     private void createCharacter(Collection<Character> characters) {
@@ -85,7 +90,8 @@ public class CharacterBatchService {
                     localCharacter.setUrl(remoteCharacter.getUrl());
                     localCharacter.setName(remoteCharacter.getName());
                     localCharacter.setCreated(remoteCharacter.getCreated());
-                    if (!ObjectUtils.isEmpty(remoteCharacter.getType()) && !StringUtils.isEmpty(remoteCharacter.getKind().getName()))
+                    localCharacter.setImages(localCharacter.getImages());
+                    if (!ObjectUtils.isEmpty(remoteCharacter.getKind()) && !StringUtils.isEmpty(remoteCharacter.getKind().getName()))
                         localCharacter.setKind(remoteCharacter.getKind());
                     if (!ObjectUtils.isEmpty(remoteCharacter.getType()) && !StringUtils.isEmpty(remoteCharacter.getType().getName()))
                         localCharacter.setType(remoteCharacter.getType());
