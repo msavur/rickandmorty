@@ -4,9 +4,11 @@ package com.egemsoft.rickandmorty.initialization;
 import com.egemsoft.rickandmorty.convert.impl.RemoteCharacterConverter;
 import com.egemsoft.rickandmorty.entity.Character;
 import com.egemsoft.rickandmorty.entity.Episode;
+import com.egemsoft.rickandmorty.entity.Kind;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
 import com.egemsoft.rickandmorty.model.dto.CharacterDto;
 import com.egemsoft.rickandmorty.repository.CharacterRepository;
+import com.egemsoft.rickandmorty.repository.KindRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
 
     private final CharacterRepository characterRepository;
     private final RemoteCharacterConverter remoteCharacterConverter;
+    private final KindRepository kindRepository;
 
     @Transactional
     @Override
@@ -42,16 +47,30 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
         List<Character> remoteCharacters = remoteCharacterConverter.convert(CommonRestRequest.getAllCharacter());
         List<Character> localCharacters = characterRepository.findAll();
 
+        Map<String, Kind> kindMap = kindRepository.findAll()
+                .stream()
+                .collect(Collectors.toMap(m -> m.getName().toUpperCase(), k -> k));
+
+        Map<String, Kind> remoteNonKinds = new HashMap<>();
+        remoteCharacters.forEach(remoteCharacter -> {
+            if (kindMap.containsKey(remoteCharacter.getSpecies().getName())) {
+                remoteCharacter.getSpecies().setId(kindMap.get(remoteCharacter.getSpecies().getName()).getId());
+            }
+        });
+
+        if (!CollectionUtils.isEmpty(remoteNonKinds.values())) {
+            insertKinds(remoteNonKinds.values());
+        }
+
         Map<Long, Character> localMap = toCharacterMap(localCharacters);
         Map<Long, Character> remoteMap = toCharacterMap(remoteCharacters);
 
         MapDifference<Long, Character> mapDifference = Maps.difference(localMap, remoteMap);
         Map<Long, Character> deleteMap = mapDifference.entriesOnlyOnLeft();
 
-        if (CollectionUtils.isEmpty(deleteMap.values())){
+        if (CollectionUtils.isEmpty(deleteMap.values())) {
             deleteCharacter(deleteMap.values());
         }
-
 
 
         List<CharacterDto> allCharacter = CommonRestRequest.getAllCharacter();
@@ -59,11 +78,16 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
         // getRemoteEpisodes
         // link, list<episode>
 
+
         Map<Long, Character> createMap = mapDifference.entriesOnlyOnRight();
         Map<Long, MapDifference.ValueDifference<Character>> updateMap = mapDifference.entriesDiffering();
 
         createCharacter(createMap.values());
         updateCharacter(updateMap.values());
+    }
+
+    private void insertKinds(Collection<Kind> localNonKins) {
+        kindRepository.saveAll(localNonKins);
     }
 
     private void createCharacter(Collection<Character> characters) {
@@ -109,7 +133,7 @@ public class CharacterApplicationStartup implements ApplicationListener<Applicat
 
     private void getCharacter(Character character, Map<Long, Episode> characterMap, List<String> characterList) {
         Set<Episode> episodes = new HashSet<>();
-        characterList.forEach(characterUrl->{
+        characterList.forEach(characterUrl -> {
             characterUrl = characterUrl.substring(characterUrl.lastIndexOf("/") + 1);
             Episode episode = characterMap.get(characterUrl);
             //  episode

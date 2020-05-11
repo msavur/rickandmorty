@@ -21,6 +21,7 @@ public class RemoteLocationConverter implements BaseConverter<List<LocationDto>,
             location.setSpecies(remote.getDimension());
             location.setName(remote.getName());
             location.setUrl(remote.getUrl());
+            location.setType(remote.getType());
             location.setCreated(remote.getCreated());
             locations.add(location);
         });
