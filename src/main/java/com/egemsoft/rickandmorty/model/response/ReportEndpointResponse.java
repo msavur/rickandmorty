@@ -1,11 +1,12 @@
 package com.egemsoft.rickandmorty.model.response;
 
 
+import com.egemsoft.rickandmorty.enums.EndpointEnum;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -14,6 +15,14 @@ public class ReportEndpointResponse {
     private String name;
     private String url;
     private Date created;
-    private String body;
-    private String header;
+    private Map header;
+    private Date createDate;
+    private String host;
+    private String remoteAddress;
+    private String method;
+    private String requestBody;
+    private EndpointEnum type;
+    private String requestHeader;
+    private String responseBody;
+    private String responseHeader;
 }

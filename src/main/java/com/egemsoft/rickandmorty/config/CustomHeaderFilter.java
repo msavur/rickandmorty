@@ -65,7 +65,6 @@ public class CustomHeaderFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
-
     private Map<String, String> getHeadersInfo(HttpServletRequest request) {
 
         Map<String, String> map = new HashMap<>();
@@ -79,4 +78,6 @@ public class CustomHeaderFilter implements Filter {
 
         return map;
     }
+
+
 }
