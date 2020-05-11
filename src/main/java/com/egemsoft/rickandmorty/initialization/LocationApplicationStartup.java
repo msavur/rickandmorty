@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
@@ -63,9 +64,17 @@ public class LocationApplicationStartup implements ApplicationListener<Applicati
         Map<Long, Location> deleteMap = mapDifference.entriesOnlyOnLeft();
         Map<Long, MapDifference.ValueDifference<Location>> updateMap = mapDifference.entriesDiffering();
 
-        createLocations(createMap.values());
-        deleteLocations(deleteMap.values());
-        updateLocations(updateMap.values());
+        if (!CollectionUtils.isEmpty(createMap.values())) {
+            createLocations(createMap.values());
+        }
+
+        if (!CollectionUtils.isEmpty(deleteMap.values())) {
+            deleteLocations(deleteMap.values());
+        }
+
+        if (!CollectionUtils.isEmpty(updateMap.values())) {
+            updateLocations(updateMap.values());
+        }
     }
 
     private void createLocations(Collection<Location> locations) {

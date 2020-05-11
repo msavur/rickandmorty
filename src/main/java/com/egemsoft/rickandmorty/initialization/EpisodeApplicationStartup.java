@@ -3,9 +3,11 @@ package com.egemsoft.rickandmorty.initialization;
 
 import com.egemsoft.rickandmorty.convert.impl.RemoteEpisodeConverter;
 import com.egemsoft.rickandmorty.convert.impl.endpoint.ApiEndpoint;
+import com.egemsoft.rickandmorty.entity.Character;
 import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.model.dto.EpisodeDto;
 import com.egemsoft.rickandmorty.model.response.GetAllEpisode;
+import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.egemsoft.rickandmorty.repository.EpisodeRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
@@ -14,13 +16,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,6 +37,7 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
 
     private final EpisodeRepository episodeRepository;
     private final RemoteEpisodeConverter remoteEpisodeConverter;
+    private final CharacterRepository characterRepository;
 
     @Transactional
     @Override
@@ -63,9 +69,28 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
         Map<Long, Episode> deleteMap = mapDifference.entriesOnlyOnLeft();
         Map<Long, MapDifference.ValueDifference<Episode>> updateMap = mapDifference.entriesDiffering();
 
-        createEpisodes(createMap.values());
-        deleteEpisodes(deleteMap.values());
-        updateEpisodes(updateMap.values());
+        if (!CollectionUtils.isEmpty(createMap.values())) {
+            createEpisodes(createMap.values());
+        }
+
+        if (!CollectionUtils.isEmpty(deleteMap.values())) {
+            deleteEpisodes(deleteMap.values());
+        }
+
+        if (!CollectionUtils.isEmpty(updateMap.values())) {
+            updateEpisodes(updateMap.values());
+        }
+    }
+
+
+    private Set<Character> getCharacter(Map<Long, Character> characterMap, Episode episode, List<String> characterList) {
+        Set<Character> characters = new HashSet<>();
+        for (String url : characterList) {
+            long characterId = Long.parseLong(url.substring(url.lastIndexOf("/") + 1));
+            Character character = characterMap.get(characterId);
+            characters.add(character);
+        }
+        return characters;
     }
 
     private void createEpisodes(Collection<Episode> episodes) {
@@ -85,6 +110,7 @@ public class EpisodeApplicationStartup implements ApplicationListener<Applicatio
                     localEpisode.setName(remoteEpisode.getName());
                     localEpisode.setEpisode(remoteEpisode.getEpisode());
                     localEpisode.setCreated(remoteEpisode.getCreated());
+                    localEpisode.setAirDate(remoteEpisode.getAirDate());
                     return localEpisode;
                 })
                 .collect(Collectors.toList());

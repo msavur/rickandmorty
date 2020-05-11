@@ -2,7 +2,6 @@ package com.egemsoft.rickandmorty.initialization;
 
 
 import com.egemsoft.rickandmorty.convert.impl.RemoteImageConverter;
-import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.entity.Image;
 import com.egemsoft.rickandmorty.entity.base.BaseEntity;
 import com.egemsoft.rickandmorty.enums.SourceTypeEnum;
@@ -15,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
@@ -56,9 +56,16 @@ public class ImageApplicationStartup implements ApplicationListener<ApplicationR
         Map<Long, Image> deleteMap = mapDifference.entriesOnlyOnLeft();
         Map<Long, MapDifference.ValueDifference<Image>> updateMap = mapDifference.entriesDiffering();
 
-        createImage(createMap.values());
-        deleteImage(deleteMap.values());
-        updateImage(updateMap.values());
+
+        if (!CollectionUtils.isEmpty(createMap.values())) {
+            createImage(createMap.values());
+        }
+        if (!CollectionUtils.isEmpty(updateMap.values())) {
+            updateImage(updateMap.values());
+        }
+        if (!CollectionUtils.isEmpty(deleteMap.values())) {
+            deleteImage(deleteMap.values());
+        }
     }
 
     private void createImage(Collection<Image> images) {
