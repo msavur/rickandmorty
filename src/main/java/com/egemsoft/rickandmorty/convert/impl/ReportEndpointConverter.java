@@ -30,6 +30,7 @@ public class ReportEndpointConverter implements BaseConverter<Page<ReportEndpoin
             reportEndpointResponse.setType(reportEndpoint.getType());
             reportEndpointResponse.setRequestBody(reportEndpoint.getRequestBody());
             reportEndpointResponse.setMethod(reportEndpoint.getMethod());
+            reportEndpointResponse.setHost(reportEndpoint.getHost());
             endpointResponses.add(reportEndpointResponse);
         });
 
