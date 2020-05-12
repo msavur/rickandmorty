@@ -38,20 +38,6 @@ public class CharacterBatchService {
     public void execute(List<CharacterDto> characterDtos) {
         List<Character> remoteCharacters = remoteCharacterConverter.convert(characterDtos);
         List<Character> localCharacters = characterRepository.findAll();
-        Map<String, Kind> kindMap = kindRepository.findAll()
-                .stream()
-                .collect(Collectors.toMap(k -> k.getName().toUpperCase(), k -> k));
-        Map<String, CharacterType> characterTypeMap = characterTypeRepository.findAll()
-                .stream()
-                .collect(Collectors.toMap(CharacterType::getName, k -> k));
-
-        for (Character remoteCharacter : remoteCharacters) {
-            if (!StringUtils.isEmpty(remoteCharacter.getKind().getName()))
-                remoteCharacter.setKind(kindMap.get(remoteCharacter.getKind().getName()));
-            if (!StringUtils.isEmpty(remoteCharacter.getType().getName()))
-                remoteCharacter.setType(characterTypeMap.get(remoteCharacter.getType().getName()));
-        }
-
 
         Map<Long, Character> localMap = toCharacterMap(localCharacters);
         Map<Long, Character> remoteMap = toCharacterMap(remoteCharacters);
