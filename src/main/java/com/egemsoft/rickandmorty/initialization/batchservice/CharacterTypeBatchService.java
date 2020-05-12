@@ -56,7 +56,8 @@ public class CharacterTypeBatchService {
     }
 
     private void deleteCharacterType(Collection<CharacterType> characterTypes) {
-        characterTypeRepository.deleteInBatch(characterTypes);
+        List<Long> characterIds = characterTypes.stream().map(CharacterType::getId).collect(Collectors.toList());
+        characterTypeRepository.deleteCharacterTypeIds(characterIds);
     }
 
     private void updateCharacterType(Collection<MapDifference.ValueDifference<CharacterType>> values) {
