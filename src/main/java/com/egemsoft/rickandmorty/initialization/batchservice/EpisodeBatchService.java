@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ public class EpisodeBatchService {
     private final EpisodeRepository episodeRepository;
     private final RemoteEpisodeConverter remoteEpisodeConverter;
 
+    @Transactional
     public void execute() {
         RestTemplate restTemplate = new RestTemplate();
         List<EpisodeDto> remoteEpisodeDtos = new ArrayList<>();

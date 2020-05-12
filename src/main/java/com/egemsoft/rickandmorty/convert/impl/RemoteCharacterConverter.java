@@ -35,25 +35,12 @@ public class RemoteCharacterConverter implements BaseConverter<List<CharacterDto
             character.setCreated(remote.getCreated());
             character.setKind(getCreateKind(remote));
             character.setType(getCreateCharacterType(remote));
-            character.setImages(getCreateImages(character, remote));
             character.setGender(GenderEnum.findGenderEnum(remote.getGender()));
             character.setStatus(CharacterStatusEnum.findCharacterStatusEnum(remote.getStatus()));
             character.setEpisodes(new HashSet<>());
             characters.add(character);
         }
         return characters;
-    }
-
-    private List<Image> getCreateImages(Character character, CharacterDto remote) {
-        List<Image> images = new ArrayList<>();
-        Image image = new Image();
-        image.setCharacter(character);
-        image.setCreated(new Date());
-        image.setUrl(remote.getImage());
-        image.setName(remote.getName());
-        image.setSourceType(SourceTypeEnum.CHARACTER);
-        images.add(image);
-        return images;
     }
 
     private CharacterType getCreateCharacterType(CharacterDto remote) {

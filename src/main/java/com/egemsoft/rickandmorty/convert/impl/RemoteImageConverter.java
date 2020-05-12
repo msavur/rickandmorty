@@ -1,6 +1,7 @@
 package com.egemsoft.rickandmorty.convert.impl;
 
 
+import com.egemsoft.core.entity.Character;
 import com.egemsoft.core.entity.Image;
 import com.egemsoft.core.enums.SourceTypeEnum;
 import com.egemsoft.rickandmorty.convert.BaseConverter;
@@ -23,6 +24,9 @@ public class RemoteImageConverter implements BaseConverter<List<CharacterDto>, L
             Image image = new Image();
             image.setSourceType(SourceTypeEnum.CHARACTER);
             image.setCreated(new Date());
+            Character character = new Character();
+            character.setRemoteId(remote.getId());
+            image.setCharacter(character);
             image.setName(remote.getName());
             image.setUrl(remote.getImage());
             images.add(image);

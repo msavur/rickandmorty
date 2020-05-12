@@ -1,17 +1,22 @@
 package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
+import com.egemsoft.core.entity.Character;
+import com.egemsoft.core.entity.CharacterType;
 import com.egemsoft.core.entity.Image;
 import com.egemsoft.core.entity.base.BaseEntity;
 import com.egemsoft.core.enums.SourceTypeEnum;
 import com.egemsoft.rickandmorty.convert.impl.RemoteImageConverter;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
+import com.egemsoft.rickandmorty.model.dto.CharacterDto;
+import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.egemsoft.rickandmorty.repository.ImageRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -27,13 +32,19 @@ public class ImageBatchService {
 
     private final RemoteImageConverter remoteImageConverter;
     private final ImageRepository imageRepository;
+    private final CharacterRepository characterRepository;
 
-    public void execute() {
-        List<Image> remoteImages = remoteImageConverter.convert(CommonRestRequest.getAllCharacter());
+    @Transactional
+    public void execute(List<CharacterDto> characterDtos) {
+        List<Image> remoteImages = remoteImageConverter.convert(characterDtos);
+        Map<Long, Character> characterMap = characterRepository.findAll()
+                .stream().collect(Collectors.toMap(Character::getRemoteId, c -> c));
         List<Image> localImages = imageRepository.findAllBySourceType(SourceTypeEnum.CHARACTER);
 
         Map<Long, Image> remoteMap = new HashMap<>();
         remoteImages.forEach(remoteImage -> {
+            Character character = characterMap.get(remoteImage.getCharacter().getRemoteId());
+            remoteImage.setCharacter(character);
             remoteMap.putIfAbsent(remoteImage.getCharacter().getId(), remoteImage);
         });
 

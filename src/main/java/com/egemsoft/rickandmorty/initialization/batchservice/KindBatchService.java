@@ -4,12 +4,14 @@ package com.egemsoft.rickandmorty.initialization.batchservice;
 import com.egemsoft.core.entity.Kind;
 import com.egemsoft.rickandmorty.convert.impl.RemoteKindConverter;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
+import com.egemsoft.rickandmorty.model.dto.CharacterDto;
 import com.egemsoft.rickandmorty.repository.KindRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
@@ -25,8 +27,9 @@ public class KindBatchService {
     private final RemoteKindConverter remoteKindConverter;
     private final KindRepository kindRepository;
 
-    public void execute() {
-        Map<String, Kind> remoteMap = remoteKindConverter.convert(CommonRestRequest.getAllCharacter());
+    @Transactional
+    public void execute(List<CharacterDto> remoteCharacters) {
+        Map<String, Kind> remoteMap = remoteKindConverter.convert(remoteCharacters);
         Map<String, Kind> localMap = kindRepository.findAll()
                 .stream()
                 .collect(Collectors.toMap(Kind::getName, r -> r));

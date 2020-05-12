@@ -7,6 +7,8 @@ import com.egemsoft.rickandmorty.initialization.batchservice.EpisodeBatchService
 import com.egemsoft.rickandmorty.initialization.batchservice.ImageBatchService;
 import com.egemsoft.rickandmorty.initialization.batchservice.KindBatchService;
 import com.egemsoft.rickandmorty.initialization.batchservice.LocationBatchService;
+import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
+import com.egemsoft.rickandmorty.model.dto.CharacterDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -14,6 +16,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -27,13 +30,14 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     private final LocationBatchService locationBatchService;
     private final CharacterTypeBatchService characterTypeBatchService;
 
-    @Transactional
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        List<CharacterDto> remoteCharacters = CommonRestRequest.getAllCharacter();
         episodeBatchService.execute();
-        kindBatchService.execute();
-        characterTypeBatchService.execute();
-        characterBatchService.execute();
-       // locationBatchService.execute();
+        kindBatchService.execute(remoteCharacters);
+        characterTypeBatchService.execute(remoteCharacters);
+        characterBatchService.execute(remoteCharacters);
+        imageBatchService.execute(remoteCharacters);
+        // locationBatchService.execute();
     }
 }
