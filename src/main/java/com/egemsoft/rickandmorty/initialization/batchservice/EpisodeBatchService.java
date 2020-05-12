@@ -1,10 +1,9 @@
 package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
+import com.egemsoft.core.entity.Episode;
 import com.egemsoft.rickandmorty.convert.impl.RemoteEpisodeConverter;
 import com.egemsoft.rickandmorty.convert.impl.endpoint.ApiEndpoint;
-import com.egemsoft.rickandmorty.entity.Character;
-import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.model.dto.EpisodeDto;
 import com.egemsoft.rickandmorty.model.response.GetAllEpisode;
 import com.egemsoft.rickandmorty.repository.EpisodeRepository;

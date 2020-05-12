@@ -1,10 +1,10 @@
 package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
+import com.egemsoft.core.entity.Image;
+import com.egemsoft.core.entity.base.BaseEntity;
+import com.egemsoft.core.enums.SourceTypeEnum;
 import com.egemsoft.rickandmorty.convert.impl.RemoteImageConverter;
-import com.egemsoft.rickandmorty.entity.Image;
-import com.egemsoft.rickandmorty.entity.base.BaseEntity;
-import com.egemsoft.rickandmorty.enums.SourceTypeEnum;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
 import com.egemsoft.rickandmorty.repository.ImageRepository;
 import com.google.common.collect.MapDifference;

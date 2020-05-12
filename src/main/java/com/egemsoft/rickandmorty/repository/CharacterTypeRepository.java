@@ -1,6 +1,6 @@
 package com.egemsoft.rickandmorty.repository;
 
-import com.egemsoft.rickandmorty.entity.CharacterType;
+import com.egemsoft.core.entity.CharacterType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

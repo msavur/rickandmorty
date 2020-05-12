@@ -1,6 +1,6 @@
 package com.egemsoft.rickandmorty.repository;
 
-import com.egemsoft.rickandmorty.entity.Episode;
+import com.egemsoft.core.entity.Episode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

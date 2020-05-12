@@ -1,7 +1,7 @@
 package com.egemsoft.rickandmorty.model.request;
 
 
-import com.egemsoft.rickandmorty.enums.GenderEnum;
+import com.egemsoft.core.enums.GenderEnum;
 import lombok.Getter;
 import lombok.Setter;
 

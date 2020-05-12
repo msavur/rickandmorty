@@ -1,7 +1,7 @@
 package com.egemsoft.rickandmorty.model.response;
 
 
-import com.egemsoft.rickandmorty.enums.EndpointEnum;
+import com.egemsoft.core.enums.EndpointEnum;
 import lombok.Getter;
 import lombok.Setter;
 

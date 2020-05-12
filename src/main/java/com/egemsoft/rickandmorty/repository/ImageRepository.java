@@ -1,7 +1,7 @@
 package com.egemsoft.rickandmorty.repository;
 
-import com.egemsoft.rickandmorty.entity.Image;
-import com.egemsoft.rickandmorty.enums.SourceTypeEnum;
+import com.egemsoft.core.entity.Image;
+import com.egemsoft.core.enums.SourceTypeEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

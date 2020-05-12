@@ -23,6 +23,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>core-egemsoft</groupId>
+            <artifactId>core-egemsoft</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

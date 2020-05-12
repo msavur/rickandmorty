@@ -1,9 +1,9 @@
 package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
+import com.egemsoft.core.entity.Location;
 import com.egemsoft.rickandmorty.convert.impl.RemoteLocationConverter;
 import com.egemsoft.rickandmorty.convert.impl.endpoint.ApiEndpoint;
-import com.egemsoft.rickandmorty.entity.Location;
 import com.egemsoft.rickandmorty.model.dto.LocationDto;
 import com.egemsoft.rickandmorty.model.response.GetAllLocation;
 import com.egemsoft.rickandmorty.repository.LocationRepository;

@@ -1,8 +1,8 @@
 package com.egemsoft.rickandmorty.service.impl;
 
+import com.egemsoft.core.entity.ReportEndpoint;
 import com.egemsoft.rickandmorty.convert.impl.ReportEndpointConverter;
 import com.egemsoft.rickandmorty.convert.impl.endpoint.ApiEndpoint;
-import com.egemsoft.rickandmorty.entity.ReportEndpoint;
 import com.egemsoft.rickandmorty.model.generic.GenericResponse;
 import com.egemsoft.rickandmorty.model.generic.PageableInfo;
 import com.egemsoft.rickandmorty.model.response.ReportEndpointResponse;
@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

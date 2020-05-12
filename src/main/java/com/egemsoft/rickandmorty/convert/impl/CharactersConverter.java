@@ -1,9 +1,9 @@
 package com.egemsoft.rickandmorty.convert.impl;
 
 
+import com.egemsoft.core.entity.Character;
 import com.egemsoft.rickandmorty.convert.BaseConverter;
 import com.egemsoft.rickandmorty.convert.impl.endpoint.ApiEndpoint;
-import com.egemsoft.rickandmorty.entity.Character;
 import com.egemsoft.rickandmorty.model.response.CharacterResponse;
 import org.springframework.data.domain.Page;
 

@@ -1,10 +1,9 @@
 package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
+import com.egemsoft.core.entity.Kind;
 import com.egemsoft.rickandmorty.convert.impl.RemoteKindConverter;
-import com.egemsoft.rickandmorty.entity.Kind;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
-import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.egemsoft.rickandmorty.repository.KindRepository;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;

@@ -1,8 +1,8 @@
 package com.egemsoft.rickandmorty.convert.impl;
 
 
+import com.egemsoft.core.entity.Location;
 import com.egemsoft.rickandmorty.convert.BaseConverter;
-import com.egemsoft.rickandmorty.entity.Location;
 import com.egemsoft.rickandmorty.model.dto.LocationDto;
 
 import java.util.ArrayList;

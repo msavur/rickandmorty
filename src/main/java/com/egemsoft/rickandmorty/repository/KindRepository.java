@@ -1,10 +1,9 @@
 package com.egemsoft.rickandmorty.repository;
 
-import com.egemsoft.rickandmorty.entity.Kind;
+import com.egemsoft.core.entity.Kind;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository

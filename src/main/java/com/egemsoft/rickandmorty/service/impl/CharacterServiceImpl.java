@@ -1,9 +1,9 @@
 package com.egemsoft.rickandmorty.service.impl;
 
+import com.egemsoft.core.entity.Character;
 import com.egemsoft.rickandmorty.convert.impl.CharacterConverter;
 import com.egemsoft.rickandmorty.convert.impl.CharactersConverter;
 import com.egemsoft.rickandmorty.convert.impl.endpoint.ApiEndpoint;
-import com.egemsoft.rickandmorty.entity.Character;
 import com.egemsoft.rickandmorty.model.generic.GenericResponse;
 import com.egemsoft.rickandmorty.model.generic.PageableInfo;
 import com.egemsoft.rickandmorty.model.response.CharacterResponse;

@@ -1,7 +1,7 @@
 package com.egemsoft.rickandmorty.config;
 
+import com.egemsoft.core.entity.ReportEndpoint;
 import com.egemsoft.rickandmorty.convert.impl.LogReportEndpointConverter;
-import com.egemsoft.rickandmorty.entity.ReportEndpoint;
 import com.egemsoft.rickandmorty.repository.ReportEndpointRepository;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;

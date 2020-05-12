@@ -1,9 +1,9 @@
 package com.egemsoft.rickandmorty.convert.impl;
 
 
+import com.egemsoft.core.entity.Image;
+import com.egemsoft.core.enums.SourceTypeEnum;
 import com.egemsoft.rickandmorty.convert.BaseConverter;
-import com.egemsoft.rickandmorty.entity.Image;
-import com.egemsoft.rickandmorty.enums.SourceTypeEnum;
 import com.egemsoft.rickandmorty.model.dto.CharacterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

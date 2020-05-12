@@ -1,8 +1,8 @@
 package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
+import com.egemsoft.core.entity.CharacterType;
 import com.egemsoft.rickandmorty.convert.impl.RemoteCharacterTypeConverter;
-import com.egemsoft.rickandmorty.entity.CharacterType;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
 import com.egemsoft.rickandmorty.repository.CharacterTypeRepository;
 import com.google.common.collect.MapDifference;

@@ -1,8 +1,8 @@
 package com.egemsoft.rickandmorty.convert.impl;
 
 
+import com.egemsoft.core.entity.Episode;
 import com.egemsoft.rickandmorty.convert.BaseConverter;
-import com.egemsoft.rickandmorty.entity.Episode;
 import com.egemsoft.rickandmorty.model.dto.EpisodeDto;
 import com.egemsoft.rickandmorty.util.DateUtils;
 import lombok.RequiredArgsConstructor;

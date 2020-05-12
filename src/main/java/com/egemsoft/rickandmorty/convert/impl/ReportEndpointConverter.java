@@ -1,8 +1,8 @@
 package com.egemsoft.rickandmorty.convert.impl;
 
 
+import com.egemsoft.core.entity.ReportEndpoint;
 import com.egemsoft.rickandmorty.convert.BaseConverter;
-import com.egemsoft.rickandmorty.entity.ReportEndpoint;
 import com.egemsoft.rickandmorty.model.response.ReportEndpointResponse;
 import com.google.gson.Gson;
 import org.springframework.data.domain.Page;

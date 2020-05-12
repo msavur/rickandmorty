@@ -1,10 +1,10 @@
 package com.egemsoft.rickandmorty.initialization.batchservice;
 
 
+import com.egemsoft.core.entity.Character;
+import com.egemsoft.core.entity.CharacterType;
+import com.egemsoft.core.entity.Kind;
 import com.egemsoft.rickandmorty.convert.impl.RemoteCharacterConverter;
-import com.egemsoft.rickandmorty.entity.Character;
-import com.egemsoft.rickandmorty.entity.CharacterType;
-import com.egemsoft.rickandmorty.entity.Kind;
 import com.egemsoft.rickandmorty.initialization.common.CommonRestRequest;
 import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.egemsoft.rickandmorty.repository.CharacterTypeRepository;
