@@ -6,19 +6,24 @@ import com.egemsoft.rickandmorty.convert.impl.endpoint.ApiEndpoint;
 import com.egemsoft.rickandmorty.model.generic.GenericResponse;
 import com.egemsoft.rickandmorty.model.generic.PageableInfo;
 import com.egemsoft.rickandmorty.model.response.ReportEndpointResponse;
+import com.egemsoft.rickandmorty.model.response.ThreadResponse;
 import com.egemsoft.rickandmorty.repository.CharacterRepository;
 import com.egemsoft.rickandmorty.repository.ReportEndpointRepository;
 import com.egemsoft.rickandmorty.service.ReportEndpointService;
-import com.egemsoft.rickandmorty.thread.RemoteProductRunnable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @Service
@@ -44,14 +49,21 @@ public class ReportEndpointServiceImpl implements ReportEndpointService {
     @Override
     public GenericResponse<?> getThread() {
         List<String> names = characterRepository.getAllCharacterName();
-        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-
-        for (int i = 0; i < names.size(); i++) {
-            RemoteProductRunnable runnable = new RemoteProductRunnable(names.get(i));
-            executorService.submit(runnable);
+        final AtomicInteger characterCount = new AtomicInteger();
+        List<Future> workers = new ArrayList<>(names.size());
+        ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
+        for (String name : names) {
+            Future<Integer> worker = executor.submit(() -> characterCount.addAndGet(counting(name)));
+            workers.add(worker);
         }
+        int result = characterCount.get();
+        ThreadResponse threadResponse = new ThreadResponse();
+        threadResponse.setTotalCharCount(result);
+        return new GenericResponse(threadResponse);
+    }
 
-        return null;
+    private static int counting(String name) {
+        return name.length();
     }
 
     private PageableInfo getPageableInfo(Page<ReportEndpoint> reportEndpoints) {
